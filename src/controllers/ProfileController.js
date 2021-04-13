@@ -1,11 +1,11 @@
 const Profile = require("../model/Profile");
 
 module.exports = {
-  index(req, res) {
-    return res.render("profile", { profile: Profile.get() });
+  async index(req, res) {
+    return res.render("profile", { profile: await Profile.get() });
   },
 
-  update(req, res) {
+  async update(req, res) {
     // Calculo do valor da hora
     // calcular o salario anual
     const yearlySalary = req.body["monthly-budget"] * 12;
@@ -18,8 +18,10 @@ module.exports = {
     // Dividir o valor por dia pelo nro de horas do dia
     const perHourValue = dailySalary / req.body["hours-per-day"];
 
+    const profile = await Profile.get();
+
     Profile.update({
-      ...Profile.get(),
+      ...profile,
       ...req.body,
       "per-hour-value": perHourValue,
     });
